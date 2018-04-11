@@ -3,7 +3,9 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {UserViewComponent} from "../../components/user/view";
 import {getUserRoles, selectRolesData} from "../../modules/user/user_roles";
-import {getUser, selectUserData} from "../../modules/user/user";
+import {deleteUser, getUser, selectUserData} from "../../modules/user/user";
+import {clearUsersData} from "../../modules/user/users";
+import {selectIsAdmin} from "../../modules/account/account";
 
 class UserViewContainer extends Component {
     componentWillMount() {
@@ -17,25 +19,48 @@ class UserViewContainer extends Component {
         });
     }
 
+    componentWillUnmount() {
+        this.props.actions.clearUsersData();
+    }
+
+    handleDelete() {
+        this.props.actions.deleteUser(this.props.user.id);
+    }
+
     render() {
+        const {
+            isAdmin,
+            user,
+            roles
+        } = this.props;
+
         return(
-            <UserViewComponent
-                user={this.props.user}
-                roles={this.props.roles}
-            />
+            <div>
+                <UserViewComponent
+                    user={user}
+                    roles={roles}
+                />
+                {
+                    isAdmin &&
+                    <button onClick={this.handleDelete.bind(this)}>Delete</button>
+                }
+            </div>
         )
     }
 }
 
 export const UserView = connect(
     (state) => ({
+        isAdmin: selectIsAdmin(state),
         user: selectUserData(state),
         roles: selectRolesData(state)
     }),
     (dispatch) => ({
         actions: bindActionCreators({
             getUser,
-            getUserRoles
+            deleteUser,
+            getUserRoles,
+            clearUsersData
         }, dispatch)
     })
 )(UserViewContainer);

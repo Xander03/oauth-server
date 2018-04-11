@@ -8,6 +8,8 @@ const GET_USER_ROLES_REQUEST = "GET_USER_ROLES_REQUEST";
 const GET_USER_ROLES_SUCCESS = "GET_USER_ROLES_SUCCESS";
 const GET_USER_ROLES_FAILED = "GET_USER_ROLES_FAILED";
 
+const CLEAR_USER_ROLES_DATA = "CLEAR_USER_ROLES_DATA";
+
 const initialState = fromJS({
     roles: [],
     loading: false,
@@ -32,6 +34,10 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", action.payload);
 
+
+        case CLEAR_USER_ROLES_DATA:
+            return initialState;
+
         default:
             return state;
 
@@ -51,6 +57,10 @@ export const getUserRolesSuccess = (data) => ({
 export const getUserRolesFailed = (error) => ({
     type: GET_USER_ROLES_FAILED,
     payload: error
+});
+
+export const clearUserRolesData = () => ({
+    type: CLEAR_USER_ROLES_DATA
 });
 
 function* getUserRolesRequest(action) {

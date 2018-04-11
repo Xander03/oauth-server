@@ -14,6 +14,8 @@ const GET_CLIENT_BY_ID_REQUEST = "GET_CLIENT_BY_ID_REQUEST";
 const GET_CLIENT_BY_ID_SUCCESS = "GET_CLIENT_BY_ID_SUCCESS";
 const GET_CLIENT_BY_ID_FAILED = "GET_CLIENT_BY_ID_FAILED";
 
+const CLEAR_CLIENT_DATA = "CLEAR_CLIENT_DATA";
+
 const initialState = fromJS({
     client: {},
     loading: false,
@@ -30,7 +32,6 @@ export const reducer = (state = initialState, action) => {
 
         case CREATE_CLIENT_SUCCESS:
             return state
-                .set("client", action.payload)
                 .set("loading", false);
 
         case CREATE_CLIENT_FAILED:
@@ -54,6 +55,10 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", action.payload);
 
+
+        case CLEAR_CLIENT_DATA:
+            return initialState;
+
         default:
             return state;
     }
@@ -64,9 +69,8 @@ export const createClient = (data) => ({
     payload: data
 });
 
-export const createClientSuccess = (data) => ({
+export const createClientSuccess = () => ({
     type: CREATE_CLIENT_SUCCESS,
-    payload: data
 });
 
 export const createClientFailed = (error) => ({
@@ -88,6 +92,11 @@ export const getClientByIdSuccess = (data) => ({
 export const getClientByIdFailed = (error) => ({
    type: GET_CLIENT_BY_ID_FAILED,
    payload: error
+});
+
+
+export const clearClientData = () => ({
+    type: CLEAR_CLIENT_DATA
 });
 
 

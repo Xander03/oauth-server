@@ -10,6 +10,8 @@ const GET_CLIENTS_REQUEST = "GET_CLIENTS_REQUEST";
 const GET_CLIENTS_SUCCESS = "GET_CLIENTS_SUCCESS";
 const GET_CLIENTS_FAILED = "GET_CLIENTS_FAILED";
 
+const CLEAR_CLIENTS_DATA = "CLEAR_CLIENTS_DATA";
+
 const initialState = fromJS({
     clients: [],
     loading: false,
@@ -34,6 +36,10 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", action.payload);
 
+
+        case CLEAR_CLIENTS_DATA:
+            return initialState;
+
         default:
             return state;
 
@@ -53,6 +59,12 @@ export const getClientsFailed = (error) => ({
     type: GET_CLIENTS_FAILED,
     payload: error
 });
+
+
+export const clearClientsData = () => ({
+    type: CLEAR_CLIENTS_DATA
+});
+
 
 function* getClientsRequest() {
     try {

@@ -1,13 +1,17 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {getClients, selectClientsData} from "../../modules/client/clients";
+import {clearClientsData, getClients, selectClientsData} from "../../modules/client/clients";
 import {ClientsListComponent} from "../../components/client/list";
 
 class ClientsListContainer extends Component {
 
     componentWillMount() {
         this.props.actions.getClients();
+    }
+
+    componentWillUnmount() {
+        this.props.actions.clearClientsData();
     }
 
     render() {
@@ -28,6 +32,7 @@ export const ClientsList = connect(
     (dispatch) => ({
         actions: bindActionCreators({
             getClients,
+            clearClientsData
         }, dispatch)
     })
 )(ClientsListContainer);

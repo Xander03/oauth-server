@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getAllUsers, selectUsersData} from "../../modules/user/users";
+import {clearUsersData, getAllUsers, selectUsersData} from "../../modules/user/users";
 import {bindActionCreators} from "redux";
 import {UsersListComponent} from "../../components/user/list";
 
@@ -11,6 +11,10 @@ class ClientUsersListContainer extends Component {
             url: "/client/get_users",
             body: `{client_id: ${this.props.client_id}}`
         });
+    }
+
+    componentWillUnmount() {
+        this.props.actions.clearUsersData();
     }
 
     render() {
@@ -31,6 +35,7 @@ export const ClientUsersList = connect(
     (dispatch) => ({
         actions: bindActionCreators({
             getAllUsers,
+            clearUsersData
         }, dispatch)
     })
 )(ClientUsersListContainer);

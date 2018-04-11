@@ -1,8 +1,11 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
 import {loadAccount} from "../../modules/account/account";
+import {bindActionCreators} from "redux";
+import {ConnectedRouter} from "react-router-redux";
 import {Navigation} from "./navigation_bar";
+import {routes} from "../../routes";
+import {history} from "../../store";
 
 class RootContainer extends Component {
     componentWillMount() {
@@ -11,9 +14,12 @@ class RootContainer extends Component {
 
     render() {
         return(
-            <div>
-                <Navigation />
-            </div>
+            <ConnectedRouter history={history}>
+                <div>
+                    <Navigation />
+                    {routes}
+                </div>
+            </ConnectedRouter>
         )
     }
 }

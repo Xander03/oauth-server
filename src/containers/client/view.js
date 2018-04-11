@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getClientById, selectClientData} from "../../modules/client/client";
+import {clearClientData, getClientById, selectClientData} from "../../modules/client/client";
 import {bindActionCreators} from "redux";
 import {ClientComponent} from "../../components/client/view";
 import {ClientUsersList} from "./client_users";
@@ -9,6 +9,10 @@ class ClientContainer extends Component {
 
     componentWillMount() {
         this.props.actions.getClientById(this.props.match.params.id);
+    }
+
+    componentWillUnmount() {
+        this.props.actions.clearClientData();
     }
 
     render() {
@@ -29,6 +33,7 @@ export const Client = connect(
     (dispatch) => ({
         actions: bindActionCreators({
             getClientById,
+            clearClientData
         }, dispatch)
     })
 )(ClientContainer);

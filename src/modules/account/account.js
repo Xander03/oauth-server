@@ -30,6 +30,8 @@ const CHANGE_PASSWORD_REQUEST = "CHANGE_PASSWORD_REQUEST";
 const CHANGE_PASSWORD_SUCCESS = "CHANGE_PASSWORD_SUCCESS";
 const CHANGE_PASSWORD_FAILED = "CHANGE_PASSWORD_FAILED";
 
+const CLEAR_ACCOUNT_DATA = "CLEAR_ACCOUNT_DATA";
+
 const initialState = fromJS({
     user: {
         login: "guest",
@@ -98,6 +100,7 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", action.payload);
 
+
         case SIGN_OUT_REQUEST:
             return state
                 .set("loading", true)
@@ -126,6 +129,9 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", action.payload);
 
+
+        case CLEAR_ACCOUNT_DATA:
+            return initialState;
 
         default:
             return state;
@@ -212,6 +218,11 @@ export const changePasswordFailed = (error) => ({
 });
 
 
+export const clearAccountData = () => ({
+    type: CLEAR_ACCOUNT_DATA
+});
+
+
 function* signUpRequest(action) {
     try {
         const body = `{login: "${action.payload.login}", password: "${action.payload.password}"}`;
@@ -280,7 +291,7 @@ function* handleSignOutSuccess() {
 }
 
 function* handleLoadAccountSuccess() {
-    yield put(push("/"));
+    // yield put(push("/"));
 }
 
 

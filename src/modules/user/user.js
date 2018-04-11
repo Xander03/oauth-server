@@ -2,6 +2,7 @@ import {fromJS} from "immutable";
 import {API_URI} from "../../settings";
 import {getAuthenticatedHeaders} from "../../utils/headers";
 import {call, put, takeEvery} from "redux-saga/effects";
+import {goBack} from "react-router-redux";
 import axios from "axios";
 
 const ENDPOINT_USER = API_URI + "/user";
@@ -9,6 +10,12 @@ const ENDPOINT_USER = API_URI + "/user";
 const GET_USER_REQUEST = "GET_USER_REQUEST";
 const GET_USER_SUCCESS = "GET_USER_SUCCESS";
 const GET_USER_FAILED = "GET_USER_FAILED";
+
+const DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
+const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
+const DELETE_USER_FAILED = "DELETE_USER_FAILED";
+
+const CLEAR_USER_DATA = "CLEAR_USER_DATA";
 
 const initialState = fromJS({
     user: {},
@@ -34,6 +41,24 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", null);
 
+
+        case DELETE_USER_REQUEST:
+            return state
+                .set("loading", false)
+                .set("error", null);
+
+        case DELETE_USER_SUCCESS:
+            return initialState;
+
+        case DELETE_USER_FAILED:
+            return state
+                .set("loading", false)
+                .set("error", action.payload);
+
+
+        case CLEAR_USER_DATA:
+            return initialState;
+
         default:
             return state;
 
@@ -55,6 +80,27 @@ export const getUserFailed = (error) => ({
     payload: error
 });
 
+
+export const deleteUser = (data) => ({
+    type: DELETE_USER_REQUEST,
+    payload: data
+});
+
+export const deleteUserSuccess = () => ({
+    type: DELETE_USER_SUCCESS
+});
+
+export const deleteUserFailed = (error) => ({
+    type: DELETE_USER_FAILED,
+    payload: error
+});
+
+
+export const clearUserData = () => ({
+    type: CLEAR_USER_DATA
+});
+
+
 function* getUserRequest(action) {
     try {
         const response = yield call(axios, ENDPOINT_USER + "/get", {
@@ -69,8 +115,31 @@ function* getUserRequest(action) {
     }
 }
 
+
+function* deleteUserRequest(action) {
+    try {
+        yield call(axios, ENDPOINT_USER + "/delete_user", {
+            method: "POST",
+            data: {user_id: action.payload},
+            headers: getAuthenticatedHeaders()
+        });
+
+        yield put(deleteUserSuccess());
+    } catch (e) {
+        yield put(deleteUserFailed(e));
+    }
+}
+
+function* handleDeleteUserSuccess() {
+    yield put(goBack());
+}
+
+
 export function* watchUserActions() {
     yield takeEvery(GET_USER_REQUEST, getUserRequest);
+    yield takeEvery(DELETE_USER_REQUEST, deleteUserRequest);
+
+    yield takeEvery(DELETE_USER_SUCCESS, handleDeleteUserSuccess);
 }
 
 export const selectUserContainer = (state) => state.containers.users.target.user;

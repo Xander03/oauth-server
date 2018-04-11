@@ -8,6 +8,8 @@ const GET_ALL_REQUEST = "GET_ALL_REQUEST";
 const GET_ALL_SUCCESS = "GET_ALL_SUCCESS";
 const GET_ALL_ERROR = "GET_ALL_ERROR";
 
+const CLEAR_USERS_DATA = "CLEAR_USERS_DATA";
+
 const initialState = fromJS({
     users: [],
     loading: false,
@@ -32,6 +34,10 @@ export const reducer = (state = initialState, action) => {
                 .set("loading", false)
                 .set("error", action.payload);
 
+
+        case CLEAR_USERS_DATA:
+            return initialState;
+
         default:
             return state;
     }
@@ -51,6 +57,12 @@ export const getAllUsersError = (error) => ({
    type: GET_ALL_ERROR,
    payload: error
 });
+
+
+export const clearUsersData = () => ({
+    type: CLEAR_USERS_DATA
+});
+
 
 function* getAllUsersRequest(action) {
     try {

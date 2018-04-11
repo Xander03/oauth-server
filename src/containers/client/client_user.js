@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {UserViewComponent} from "../../components/user/view";
-import {getUserRoles, selectRolesData} from "../../modules/user/user_roles";
-import {getUser, selectUserData} from "../../modules/user/user";
+import {clearUserRolesData, getUserRoles, selectRolesData} from "../../modules/user/user_roles";
+import {clearUserData, getUser, selectUserData} from "../../modules/user/user";
 import {selectClientData} from "../../modules/client/client";
 
 class ClientUserViewContainer extends Component {
@@ -15,6 +15,11 @@ class ClientUserViewContainer extends Component {
             url: "/client/get_roles",
             body: body
         });
+    }
+
+    componentWillUnmount() {
+        this.props.actions.clearUserData();
+        this.props.actions.clearUserRolesData();
     }
 
     render() {
@@ -36,7 +41,9 @@ export const ClientUserView = connect(
     (dispatch) => ({
         actions: bindActionCreators({
             getUser,
-            getUserRoles
+            getUserRoles,
+            clearUserData,
+            clearUserRolesData
         }, dispatch)
     })
 )(ClientUserViewContainer);
